@@ -1,0 +1,15 @@
+package life;
+
+option go_package = "github.com/Nashluffy/aqualog";
+
+service Life {
+  rpc GetByID(GetByIDRequest) returns (GetByIDResponse) {}
+}
+
+message GetByIDRequest {
+  required int32 id = 1;
+}
+
+message GetByIDResponse {
+  optional string name = 1;
+}
