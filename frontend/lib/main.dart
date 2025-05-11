@@ -27,6 +27,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final GrpcClient grpcClient = GrpcClient();
   String _speciesName = 'Loading...';
+  String _speciesComments = 'Loading...';
 
   @override
   void initState() {
@@ -36,9 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _fetchSpecies(int id) async {
     await grpcClient.createClient(); // Initialize the gRPC client
-    final name = await grpcClient.getSpeciesById(id); // Example ID: 1
+    final response = await grpcClient.getSpeciesById(id); // Example ID: 1
     setState(() {
-      _speciesName = name; // Update the UI with the species name
+      _speciesName = response.name; // Update the UI with the species name
+      _speciesComments = response.comments;
     });
   }
 
@@ -68,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             DefaultTextStyle.merge(child: Text(_speciesName)),
+            DefaultTextStyle.merge(child: Text(_speciesComments)),
           ],
         ),
       ),

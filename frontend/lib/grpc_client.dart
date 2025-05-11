@@ -18,15 +18,10 @@ class GrpcClient {
   }
 
   // Call the GetByID RPC method
-  Future<String> getSpeciesById(int id) async {
-    try {
-      final request = GetByIDRequest()..id = id; // Create request with the id
-      final response = await stub!.getByID(request); // Call the RPC method
-      return response.name; // Return the name of the species from the response
-    } catch (e) {
-      print('Error calling gRPC service: $e');
-      return 'Error: $e'; // Handle error if the RPC fails
-    }
+  Future<GetByIDResponse> getSpeciesById(int id) async {
+    final request = GetByIDRequest()..id = id; // Create request with the id
+    final response = await stub!.getByID(request); // Call the RPC method
+    return response; // Return the name of the species from the response
   }
 
   // Shutdown the gRPC client

@@ -12,4 +12,5 @@ message GetByIDRequest {
 
 message GetByIDResponse {
   optional string name = 1;
+  optional string comments = 2;
 }

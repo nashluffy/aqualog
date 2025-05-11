@@ -17,7 +17,7 @@ GO_TOOLS := \
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 
-SERVER_BINARY_NAME=cmd/server/main.go
+SERVER_BINARY_NAME=backend/cmd/server/main.go
 
 run:
 	@echo "Starting gRPC server..."
