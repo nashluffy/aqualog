@@ -1,10 +1,16 @@
 PROTO_SRC := protos
 GO_OUT := gen/go
-DART_OUT := gen/dart
+DART_OUT := frontend/lib/gen/dart
 
 PROTOC_VERSION := 24.4
 PROTOC_BASE_URL := https://github.com/protocolbuffers/protobuf/releases/download/v$(PROTOC_VERSION)
 PROTO_FILES := $(shell find $(PROTO_SRC) -name "*.proto")
+# Add your Go and Dart plugin paths
+PROTOC_GEN_GO=$(shell which protoc-gen-go)
+PROTOC_GEN_GRPC=$(shell which protoc-gen-go-grpc)
+PROTOC_GEN_DART=$(shell which protoc-gen-dart)
+PROTOC_GEN_GRPC_WEB=$(shell which protoc-gen-grpc-web)
+
 
 GO_TOOLS := \
 	google.golang.org/protobuf/cmd/protoc-gen-go@latest \
@@ -17,43 +23,29 @@ run:
 	@echo "Starting gRPC server..."
 	go run $(SERVER_BINARY_NAME)
 
-.PHONY: generate
+.PHONY: gen
 
-generate:
+gen:
 	@mkdir -p $(GO_OUT) $(DART_OUT)
 	@for file in $(PROTO_FILES); do \
 		protoc -I$(PROTO_SRC) \
 			--go_out=$(GO_OUT) --go_opt=paths=source_relative \
 			--go-grpc_out=$(GO_OUT) --go-grpc_opt=paths=source_relative \
-			--dart_out=$(DART_OUT) \
+			--dart_out=grpc:$(DART_OUT) \
 			$$file; \
 	done
-
 .PHONY: deps
 
 deps:
-	@echo "🔍 Checking for protoc..."
-	@if ! command -v protoc >/dev/null 2>&1; then \
-		echo "❌ 'protoc' not found. Downloading protoc $(PROTOC_VERSION)..."; \
-		OS=$$(uname -s | tr '[:upper:]' '[:lower:]'); \
-		ZIP=protoc-$(PROTOC_VERSION)-$$OS-x86_64.zip; \
-		curl -LO $(PROTOC_BASE_URL)/$$ZIP; \
-		unzip -o $$ZIP -d protoc_tmp -x 'include/*'; \
-		sudo install protoc_tmp/bin/protoc /usr/local/bin/protoc; \
-		rm -rf protoc_tmp $$ZIP; \
-		echo "✅ Installed protoc to /usr/local/bin/protoc"; \
-	else \
-		echo "✅ protoc found: $$(protoc --version)"; \
-	fi
-
-	@echo "📦 Installing Go protoc plugins..."
-	@for tool in $(GO_TOOLS); do \
-		echo "Installing $$tool"; \
-		go install $$tool; \
-	done
-
-	@echo "📦 Ensuring Dart protoc plugin is activated..."
-	@dart pub global activate protoc_plugin
-
-	@echo "✅ Done. Make sure your PATH includes Dart's pub cache bin directory:"
-	@echo '   export PATH="$$PATH:$$HOME/.pub-cache/bin"'
+	@echo "Ensuring all dependencies are installed..."
+	# Install Go dependencies
+	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	# Install Dart dependencies for gRPC
+	@cd frontend && flutter pub add grpc protobuf
+	@cd frontend && flutter pub get
+	# Verify installation
+	@echo "Verifying installation..."
+	@echo "protoc-gen-go version: $(PROTOC_GEN_GO)"
+	@echo "protoc-gen-go-grpc version: $(PROTOC_GEN_GRPC)"
+	@echo "protoc-gen-dart version: $(PROTOC_GEN_DART)"

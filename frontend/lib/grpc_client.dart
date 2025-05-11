@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:grpc/grpc.dart';
-import 'package:aqualog/gen/dart/life.pb.dart'; // Updated import
-import 'package:aqualog/gen/dart/life.pbgrpc.dart'; // Updated import
+import 'gen/dart/life/service.pbgrpc.dart';
 
 class GrpcClient {
   ClientChannel? channel;
@@ -10,11 +9,9 @@ class GrpcClient {
   // Initialize the gRPC client
   Future<void> createClient() async {
     channel = ClientChannel(
-      'localhost', // Address of the Go server (adjust if necessary)
+      '127.0.0.1',
       port: 50051, // Port where the Go server is running
-      options: const ChannelOptions(
-        credentials: ChannelCredentials.insecure(), // No SSL in development
-      ),
+      options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
     );
 
     stub = LifeClient(channel!); // Create a stub for making RPC calls
