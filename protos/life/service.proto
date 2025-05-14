@@ -4,13 +4,27 @@ option go_package = "github.com/Nashluffy/aqualog";
 
 service Life {
   rpc GetByID(GetByIDRequest) returns (GetByIDResponse) {}
+  rpc GetByCommonName(GetByCommonNameRequest) returns (GetByCommonNameResponse) {}
 }
 
 message GetByIDRequest {
-  required int32 id = 1;
+  optional int32 id = 1;
+}
+
+message GetByCommonNameRequest{
+  optional string name = 1;
+}
+
+message GetByCommonNameResponse {
+  repeated SpeciesInformation species = 1;
+}
+
+message SpeciesInformation {
+  optional string id = 1;
+  optional string name = 2;
+  optional string comments = 3;
 }
 
 message GetByIDResponse {
-  optional string name = 1;
-  optional string comments = 2;
+  optional SpeciesInformation species = 1;
 }

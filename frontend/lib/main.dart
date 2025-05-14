@@ -1,5 +1,4 @@
-import 'dart:ffi';
-
+import 'package:aqualog/gen/dart/life/service.pb.dart';
 import 'package:aqualog/species_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,20 +26,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GrpcClient grpcClient = GrpcClient();
-  String _speciesName = 'Loading...';
-  String _speciesComments = 'Loading...';
+  SpeciesInformation? _species;
   @override
   void initState() {
     super.initState();
-    _fetchSpecies(5); // Fetch species when the app starts
   }
 
   Future<void> _fetchSpecies(int id) async {
     await grpcClient.createClient(); // Initialize the gRPC client
     final response = await grpcClient.getSpeciesById(id); // Example ID: 1
     setState(() {
-      _speciesName = response.name; // Update the UI with the species name
-      _speciesComments = response.comments;
+      _species = response.species;
     });
   }
 
@@ -64,15 +60,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onSubmitted: (String value) async {
                 await _fetchSpecies(int.parse(value));
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Species ID',
               ),
             ),
-            SpeciesCard(
-              speciesComments: _speciesComments,
-              speciesName: _speciesName,
-            ),
+            if (_species != null) SpeciesCard(species: _species!),
           ],
         ),
       ),

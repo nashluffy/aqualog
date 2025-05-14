@@ -1,18 +1,11 @@
-import 'dart:ffi';
-
+import 'package:aqualog/gen/dart/life/service.pb.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'grpc_client.dart'; // Import the gRPC client
 
 class SpeciesCard extends StatelessWidget {
-  final String speciesName;
-  final String speciesComments;
+  final SpeciesInformation species;
 
-  const SpeciesCard({
-    Key? key,
-    required this.speciesName,
-    required this.speciesComments,
-  }) : super(key: key);
+  const SpeciesCard({Key? key, required SpeciesInformation this.species})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +13,8 @@ class SpeciesCard extends StatelessWidget {
       child: Card(
         child: Column(
           children: [
-            DefaultTextStyle.merge(child: Text(speciesName)),
-            DefaultTextStyle.merge(child: Text(speciesComments)),
+            DefaultTextStyle.merge(child: Text(species.name)),
+            DefaultTextStyle.merge(child: Text(species.comments)),
           ],
         ),
       ),
