@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:aqualog/species_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'grpc_client.dart'; // Import the gRPC client
@@ -28,7 +29,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final GrpcClient grpcClient = GrpcClient();
   String _speciesName = 'Loading...';
   String _speciesComments = 'Loading...';
-
   @override
   void initState() {
     super.initState();
@@ -69,8 +69,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 labelText: 'Species ID',
               ),
             ),
-            DefaultTextStyle.merge(child: Text(_speciesName)),
-            DefaultTextStyle.merge(child: Text(_speciesComments)),
+            SpeciesCard(
+              speciesComments: _speciesComments,
+              speciesName: _speciesName,
+            ),
           ],
         ),
       ),
