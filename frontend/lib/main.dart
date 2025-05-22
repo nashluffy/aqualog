@@ -1,5 +1,5 @@
 import 'package:aqualog/gen/dart/life/service.pb.dart';
-import 'package:aqualog/species_card.dart';
+import 'package:aqualog/species.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'grpc_client.dart'; // Import the gRPC client
@@ -26,7 +26,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GrpcClient grpcClient = GrpcClient();
-  SpeciesInformation? _species;
+  List<SpeciesInformation>? _species;
   @override
   void initState() {
     super.initState();
@@ -36,8 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await grpcClient.createClient(); // Initialize the gRPC client
     final response = await grpcClient.getSpeciesByName(name); // Example ID: 1
     setState(() {
-      _species = response.species[0];
-      print(_species);
+      _species = response.species.toList();
     });
   }
 
@@ -78,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 labelText: 'Species ID',
               ),
             ),
-            if (_species != null) SpeciesCard(species: _species!),
+            if (_species != null) SpeciesCardList(species: _species!),
           ],
         ),
       ),

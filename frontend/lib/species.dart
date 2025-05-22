@@ -20,3 +20,22 @@ class SpeciesCard extends StatelessWidget {
     );
   }
 }
+
+class SpeciesCardList extends StatelessWidget {
+  final List<SpeciesInformation> species;
+
+  const SpeciesCardList({Key? key, required this.species}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: species.length,
+        itemBuilder: (context, index) {
+          return SpeciesCard(species: species[index]);
+        },
+      ),
+    );
+  }
+}
