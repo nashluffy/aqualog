@@ -34,6 +34,7 @@ gen:
 			--dart_out=grpc:$(DART_OUT) \
 			$$file; \
 	done
+
 .PHONY: deps
 
 deps:
@@ -49,3 +50,6 @@ deps:
 	@echo "protoc-gen-go version: $(PROTOC_GEN_GO)"
 	@echo "protoc-gen-go-grpc version: $(PROTOC_GEN_GRPC)"
 	@echo "protoc-gen-dart version: $(PROTOC_GEN_DART)"
+	@curl --create-dirs -L -o bin/species.parquet https://fishbase.ropensci.org/fishbase/species.parquet
+	@curl --create-dirs -L -o bin/comnames_all.parquet https://fishbase.ropensci.org/sealifebase/comnames_all.parquet
+

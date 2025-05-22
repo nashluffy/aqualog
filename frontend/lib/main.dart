@@ -32,16 +32,23 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  Future<void> _fetchSpecies(int id) async {
+  Future<void> _fetchSpecies(String name) async {
     await grpcClient.createClient(); // Initialize the gRPC client
-    final response = await grpcClient.getSpeciesById(id); // Example ID: 1
+    final response = await grpcClient.getSpeciesByName(name); // Example ID: 1
     setState(() {
-      _species = response.species;
+      _species = response.species[0];
+      print(_species);
     });
   }
 
+  final _focusDelay = Duration(milliseconds: 10);
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _controller = TextEditingController();
+
   @override
   void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
     grpcClient.shutdown(); // Clean up the gRPC client
     super.dispose();
   }
@@ -55,10 +62,16 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             TextField(
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              controller: _controller,
+              focusNode: _focusNode,
+              textInputAction: TextInputAction.newline, // Keep keyboard open
+
               onSubmitted: (String value) async {
-                await _fetchSpecies(int.parse(value));
+                Future.delayed(_focusDelay, () {
+                  _focusNode.requestFocus();
+                });
+
+                await _fetchSpecies(value);
               },
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),

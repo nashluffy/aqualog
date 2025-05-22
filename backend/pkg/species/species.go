@@ -17,6 +17,11 @@ type speciesFromCommonName struct {
 	SpeciesID  int
 }
 
+type ParquetPaths struct {
+	Species     string
+	CommonNames string
+}
+
 type Fetcher interface {
 	GetByIDs(id []int) ([]Species, error)
 	GetByCommonName(cn string) ([]Species, error)
@@ -24,21 +29,18 @@ type Fetcher interface {
 
 type fetcher struct {
 	dbConn       *sql.DB
-	fishbaseHost string
-	sealifeHost  string
+	parquetPaths ParquetPaths
 }
 
-func NewFetcher(dbConn *sql.DB, fishbaseHost, sealifeHost string) Fetcher {
+func NewFetcher(dbConn *sql.DB, parquetPaths ParquetPaths) Fetcher {
 	return &fetcher{
 		dbConn:       dbConn,
-		fishbaseHost: fishbaseHost,
-		sealifeHost:  sealifeHost,
+		parquetPaths: parquetPaths,
 	}
 }
 
 func (s *fetcher) GetByCommonName(cn string) ([]Species, error) {
-	fullPath := fmt.Sprintf("%s/%s", s.sealifeHost, "comnames_all.parquet")
-	query := fmt.Sprintf(`SELECT CommonName, SpeciesID FROM read_parquet('%s') WHERE CommonName ILIKE ? `, fullPath)
+	query := fmt.Sprintf(`SELECT CommonName, SpeciesID FROM read_parquet('%s') WHERE CommonName ILIKE ? `, s.parquetPaths.CommonNames)
 	condition := "%" + cn + "%"
 	rows, err := s.dbConn.Query(query, condition)
 	if err != nil {
@@ -59,9 +61,11 @@ func (s *fetcher) GetByCommonName(cn string) ([]Species, error) {
 }
 
 func (s *fetcher) GetByIDs(ids []int) ([]Species, error) {
-	fullPath := fmt.Sprintf("%s/%s", s.fishbaseHost, "species.parquet")
+	if len(ids) == 0 {
+		return nil, nil
+	}
 	inClause, args := buildInClause(ids)
-	query := fmt.Sprintf(`SELECT SpecCode,Comments FROM read_parquet('%s') WHERE SpecCode IN %s`, fullPath, inClause)
+	query := fmt.Sprintf(`SELECT SpecCode,Comments FROM read_parquet('%s') WHERE SpecCode IN %s`, s.parquetPaths.Species, inClause)
 
 	rows, err := s.dbConn.Query(query, args...)
 	if err != nil {

@@ -26,3 +26,6 @@ go.work.sum
 
 # proto
 gen/
+
+# where parquet files are downloaded to
+bin/

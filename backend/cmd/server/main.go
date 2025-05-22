@@ -49,9 +49,10 @@ func (s *server) GetByCommonName(ctx context.Context, req *life.GetByCommonNameR
 	}
 	var results []*aqualog.SpeciesInformation
 	for _, specie := range species {
-		n := fmt.Sprintf("%d", species)
+		n := fmt.Sprintf("%d", specie.SpecCode)
 		results = append(results, &aqualog.SpeciesInformation{
 			Id:       &n,
+			Name:     &n,
 			Comments: &specie.Comments.String,
 		})
 	}
@@ -72,7 +73,10 @@ func main() {
 	}
 	defer db.Close()
 
-	speciesFetcher := species.NewFetcher(db, "https://fishbase.ropensci.org/fishbase", "https://fishbase.ropensci.org/sealifebase")
+	speciesFetcher := species.NewFetcher(db, species.ParquetPaths{
+		CommonNames: "bin/comnames_all.parquet",
+		Species:     "bin/species.parquet",
+	})
 	server := &server{
 		speciesFetcher: speciesFetcher,
 	}

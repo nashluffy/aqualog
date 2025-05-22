@@ -6,25 +6,28 @@ class GrpcClient {
   ClientChannel? channel;
   LifeClient? stub;
 
-  // Initialize the gRPC client
   Future<void> createClient() async {
     channel = ClientChannel(
       '127.0.0.1',
-      port: 50051, // Port where the Go server is running
+      port: 50051,
       options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
     );
 
-    stub = LifeClient(channel!); // Create a stub for making RPC calls
+    stub = LifeClient(channel!);
   }
 
-  // Call the GetByID RPC method
   Future<GetByIDResponse> getSpeciesById(int id) async {
-    final request = GetByIDRequest()..id = id; // Create request with the id
-    final response = await stub!.getByID(request); // Call the RPC method
-    return response; // Return the name of the species from the response
+    final request = GetByIDRequest()..id = id;
+    final response = await stub!.getByID(request);
+    return response;
   }
 
-  // Shutdown the gRPC client
+  Future<GetByCommonNameResponse> getSpeciesByName(String name) async {
+    final request = GetByCommonNameRequest()..name = name;
+    final response = await stub!.getByCommonName(request);
+    return response;
+  }
+
   Future<void> shutdown() async {
     await channel?.shutdown();
   }
