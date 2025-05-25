@@ -1,8 +1,8 @@
-package life;
+package marine;
 
-option go_package = "github.com/Nashluffy/aqualog";
+option go_package = "github.com/Nashluffy/marine";
 
-service Life {
+service Catalogue {
   rpc GetByID(GetByIDRequest) returns (GetByIDResponse) {}
   rpc GetByCommonName(GetByCommonNameRequest) returns (GetByCommonNameResponse) {}
 }

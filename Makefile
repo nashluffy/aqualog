@@ -11,6 +11,11 @@ PROTOC_GEN_GRPC=$(shell which protoc-gen-go-grpc)
 PROTOC_GEN_DART=$(shell which protoc-gen-dart)
 PROTOC_GEN_GRPC_WEB=$(shell which protoc-gen-grpc-web)
 
+PROTOBUF_REPO := ./gen/protobuf
+$(PROTOBUF_REPO):
+	git clone --depth 1 https://github.com/protocolbuffers/protobuf.git $(PROTOBUF_REPO)
+PROTO_INCLUDE := $(PROTOBUF_REPO)/src
+
 
 GO_TOOLS := \
 	google.golang.org/protobuf/cmd/protoc-gen-go@latest \
@@ -25,10 +30,11 @@ run:
 
 .PHONY: gen
 
-gen:
+gen: $(PROTOBUF_REPO)
 	@mkdir -p $(GO_OUT) $(DART_OUT)
 	@for file in $(PROTO_FILES); do \
 		protoc -I$(PROTO_SRC) \
+			-I$(PROTO_INCLUDE) \
 			--go_out=$(GO_OUT) --go_opt=paths=source_relative \
 			--go-grpc_out=$(GO_OUT) --go-grpc_opt=paths=source_relative \
 			--dart_out=grpc:$(DART_OUT) \

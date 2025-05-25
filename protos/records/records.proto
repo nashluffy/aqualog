@@ -1,0 +1,34 @@
+package records;
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/Nashluffy/records";
+
+
+service Storage {
+  rpc CreateRecord(CreateRecordRequest) returns (CreateRecordResponse) {}
+  rpc ReadRecord(ReadRecordRequest) returns (ReadRecordResponse) {}
+}
+
+message CreateRecordRequest {
+  optional Record record = 1;
+}
+
+message CreateRecordResponse {
+  optional string id = 1;
+}
+
+message ReadRecordRequest {
+  optional string id = 1;
+}
+
+message ReadRecordResponse {
+  optional Record record = 1;
+}
+
+
+
+message Record {
+  optional string id = 1;
+  optional string species_id = 2;
+  optional string comments = 3;
+  optional google.protobuf.Timestamp time = 4;
+}
