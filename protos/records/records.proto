@@ -3,34 +3,6 @@ import "google/protobuf/timestamp.proto";
 option go_package = "github.com/Nashluffy/records";
 
 
-service Storage {
-  rpc CreateRecord(CreateRecordRequest) returns (CreateRecordResponse) {}
-  rpc ReadRecord(ReadRecordRequest) returns (ReadRecordResponse) {}
-  rpc ListRecords(ListRecordsRequest) returns (ListRecordsResponse) {}
-}
-
-message CreateRecordRequest {
-  optional Record record = 1;
-}
-
-message CreateRecordResponse {
-  optional string id = 1;
-}
-
-message ReadRecordRequest {
-  optional string id = 1;
-}
-
-message ReadRecordResponse {
-  optional Record record = 1;
-}
-
-message ListRecordsRequest{}
-
-message ListRecordsResponse{
-  repeated Record records = 1;
-}
-
 message Record {
   optional string id = 1;
   optional string species_id = 2;

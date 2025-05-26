@@ -11,9 +11,7 @@ import (
 	_ "github.com/marcboeker/go-duckdb"
 
 	"github.com/Nashluffy/aqualog/backend/pkg/species"
-	"github.com/Nashluffy/aqualog/backend/pkg/storage"
 	"github.com/Nashluffy/aqualog/gen/marine"
-	"github.com/Nashluffy/aqualog/gen/records"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -21,10 +19,7 @@ import (
 
 type server struct {
 	marine.UnimplementedCatalogueServer
-	records.UnimplementedStorageServer
 	speciesFetcher species.Fetcher
-	recordReader   storage.Reader
-	recordWriter   storage.Writer
 }
 
 func main() {
@@ -52,14 +47,9 @@ func main() {
 	}
 	slog.Info("persisting records", "path", p)
 	defer os.RemoveAll(p)
-	recordReader := storage.NewFSReader(p)
-	recordWriter := storage.NewFSWriter(p)
 	server := &server{
 		speciesFetcher: speciesFetcher,
-		recordReader:   recordReader,
-		recordWriter:   recordWriter,
 	}
-	records.RegisterStorageServer(s, server)
 	marine.RegisterCatalogueServer(s, server)
 	reflection.Register(s)
 
