@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
 	"log/slog"
 	"net"
@@ -10,7 +8,6 @@ import (
 
 	"database/sql"
 
-	"github.com/google/uuid"
 	_ "github.com/marcboeker/go-duckdb"
 
 	"github.com/Nashluffy/aqualog/backend/pkg/species"
@@ -28,62 +25,6 @@ type server struct {
 	speciesFetcher species.Fetcher
 	recordReader   storage.Reader
 	recordWriter   storage.Writer
-}
-
-// ReadRecord implements records.CatalogueServer.
-func (s *server) ReadRecord(ctx context.Context, req *records.ReadRecordRequest) (*records.ReadRecordResponse, error) {
-	r, err := s.recordReader.Read(req.GetId())
-	if err != nil {
-		slog.Warn(err.Error())
-		return nil, fmt.Errorf("no record found: %w", err.Error())
-	}
-	return &records.ReadRecordResponse{Record: &r}, nil
-}
-
-func (s *server) GetByID(ctx context.Context, req *marine.GetByIDRequest) (*marine.GetByIDResponse, error) {
-	allSpecies, err := s.speciesFetcher.GetByIDs([]int{int(req.GetId())})
-	if err != nil {
-		slog.Warn(err.Error())
-		return nil, err
-	}
-	if len(allSpecies) != 1 {
-		return nil, fmt.Errorf("unexpected number of species returned: %d", len(allSpecies))
-	}
-	species := allSpecies[0]
-	n := fmt.Sprintf("%d", species)
-	return &marine.GetByIDResponse{Species: &marine.SpeciesInformation{
-		Id:       &n,
-		Comments: &species.Comments.String,
-	}}, nil
-}
-
-func (s *server) GetByCommonName(ctx context.Context, req *marine.GetByCommonNameRequest) (*marine.GetByCommonNameResponse, error) {
-	species, err := s.speciesFetcher.GetByCommonName(req.GetName())
-	if err != nil {
-		slog.Warn(err.Error())
-		return nil, err
-	}
-	var results []*marine.SpeciesInformation
-	for _, specie := range species {
-		n := fmt.Sprintf("%d", specie.SpecCode)
-		results = append(results, &marine.SpeciesInformation{
-			Id:       &n,
-			Name:     &n,
-			Comments: &specie.Comments.String,
-		})
-	}
-	return &marine.GetByCommonNameResponse{Species: results}, nil
-}
-
-func (s *server) CreateRecord(ctx context.Context, req *records.CreateRecordRequest) (*records.CreateRecordResponse, error) {
-	id := uuid.New().String()
-	req.Record.Id = &id
-	err := s.recordWriter.Write(*req.Record)
-	if err != nil {
-		slog.Warn(err.Error())
-		return nil, err
-	}
-	return &records.CreateRecordResponse{Id: &id}, nil
 }
 
 func main() {
