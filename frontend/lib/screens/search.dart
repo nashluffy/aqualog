@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:aqualog/gen/marine/marine.pb.dart';
 
-import 'package:aqualog/species.dart';
+import 'package:aqualog/widgets/species.dart';
 import '../services/grpc_client.dart'; // Import the gRPC client
 
 class SearchPage extends StatefulWidget {
