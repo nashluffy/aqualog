@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class SpeciesCard extends StatelessWidget {
   final SpeciesInformation species;
 
-  const SpeciesCard({Key? key, required this.species}) : super(key: key);
+  const SpeciesCard({super.key, required this.species});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class SpeciesCard extends StatelessWidget {
 class SpeciesCardList extends StatelessWidget {
   final List<SpeciesInformation> species;
 
-  const SpeciesCardList({Key? key, required this.species}) : super(key: key);
+  const SpeciesCardList({super.key, required this.species});
 
   @override
   Widget build(BuildContext context) {

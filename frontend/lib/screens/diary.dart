@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class DiaryPage extends StatelessWidget {
-  const DiaryPage({Key? key}) : super(key: key);
+  const DiaryPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Diary')),
+      appBar: AppBar(title: const Text('Diary')),
       body: Center(
         child: TextButton(
           onPressed: () {

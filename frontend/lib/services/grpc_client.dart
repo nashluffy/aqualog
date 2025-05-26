@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:grpc/grpc.dart';
-import 'gen/marine/marine.pbgrpc.dart';
+import '../gen/marine/marine.pbgrpc.dart';
 
 class GrpcClient {
   ClientChannel? channel;
