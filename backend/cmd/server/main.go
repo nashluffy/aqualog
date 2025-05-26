@@ -109,6 +109,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create storage: %w", err.Error())
 	}
+	slog.Info("persisting records", "path", p)
 	defer os.RemoveAll(p)
 	recordReader := storage.NewFSReader(p)
 	recordWriter := storage.NewFSWriter(p)
@@ -122,7 +123,7 @@ func main() {
 	marine.RegisterCatalogueServer(s, server)
 	reflection.Register(s)
 
-	fmt.Println("Server is running on port 50051...")
+	slog.Info("server is running", "addr", lis.Addr().String())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

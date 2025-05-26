@@ -25,7 +25,6 @@ GO_TOOLS := \
 SERVER_BINARY_NAME=backend/cmd/server/main.go
 
 run:
-	@echo "Starting gRPC server..."
 	go run $(SERVER_BINARY_NAME)
 
 .PHONY: gen
