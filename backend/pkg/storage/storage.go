@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	records "github.com/Nashluffy/aqualog/gen/go/records"
+	records "github.com/Nashluffy/aqualog/gen/records"
 )
 
 type Writer interface {

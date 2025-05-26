@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	marine "github.com/Nashluffy/aqualog/gen/go/marine"
+	"github.com/Nashluffy/aqualog/gen/marine"
 )
 
 func (s *server) GetByID(ctx context.Context, req *marine.GetByIDRequest) (*marine.GetByIDResponse, error) {

@@ -12,8 +12,8 @@ import (
 
 	"github.com/Nashluffy/aqualog/backend/pkg/species"
 	"github.com/Nashluffy/aqualog/backend/pkg/storage"
-	marine "github.com/Nashluffy/aqualog/gen/go/marine"
-	"github.com/Nashluffy/aqualog/gen/go/records"
+	"github.com/Nashluffy/aqualog/gen/marine"
+	"github.com/Nashluffy/aqualog/gen/records"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -59,7 +59,6 @@ func main() {
 		recordReader:   recordReader,
 		recordWriter:   recordWriter,
 	}
-
 	records.RegisterStorageServer(s, server)
 	marine.RegisterCatalogueServer(s, server)
 	reflection.Register(s)

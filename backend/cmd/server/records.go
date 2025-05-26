@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/Nashluffy/aqualog/gen/go/records"
+	"github.com/Nashluffy/aqualog/gen/records"
 	"github.com/google/uuid"
 )
 
