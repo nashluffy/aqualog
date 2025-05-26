@@ -1,29 +1,31 @@
 import 'package:aqualog/gen/marine/marine.pb.dart';
+import 'package:aqualog/screens/diary.dart';
+import 'package:aqualog/screens/search.dart';
 import 'package:aqualog/species.dart';
 import 'package:flutter/material.dart';
 import 'grpc_client.dart'; // Import the gRPC client
 
 void main() {
-  runApp(MyApp());
+  runApp(AqualogApp());
 }
 
-class MyApp extends StatelessWidget {
+class AqualogApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter gRPC Client',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: MyHomePage(),
+      home: DefaultTabController(length: 3, child: AqualogHomePage()),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class AqualogHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<AqualogHomePage> {
   final GrpcClient grpcClient = GrpcClient();
   List<SpeciesInformation>? _species;
   @override
@@ -54,7 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('aqualog')),
+      appBar: AppBar(
+        title: Text('aqualog'),
+        bottom: const TabBar(
+          tabs: [Tab(icon: Icon(Icons.search)), Tab(icon: Icon(Icons.book))],
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(200.0),
         child: Column(

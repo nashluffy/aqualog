@@ -10,5 +10,7 @@ dependencies:
   grpc: ^4.0.4
   protobuf: ^4.1.0
 
+flutter:
+  uses-material-design: true
 dev_dependencies:
   flutter_lints: ^3.0.1
