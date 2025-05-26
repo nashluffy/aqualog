@@ -28,3 +28,12 @@ func (s *server) CreateRecord(ctx context.Context, req *records.CreateRecordRequ
 	}
 	return &records.CreateRecordResponse{Id: &id}, nil
 }
+
+func (s *server) ListRecords(ctx context.Context, req *records.ListRecordsRequest) (*records.ListRecordsResponse, error) {
+	r, err := s.recordReader.List()
+	if err != nil {
+		slog.Warn(err.Error())
+		return nil, err
+	}
+	return &records.ListRecordsResponse{Records: r}, nil
+}

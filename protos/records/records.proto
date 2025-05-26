@@ -6,6 +6,7 @@ option go_package = "github.com/Nashluffy/records";
 service Storage {
   rpc CreateRecord(CreateRecordRequest) returns (CreateRecordResponse) {}
   rpc ReadRecord(ReadRecordRequest) returns (ReadRecordResponse) {}
+  rpc ListRecords(ListRecordsRequest) returns (ListRecordsResponse) {}
 }
 
 message CreateRecordRequest {
@@ -24,7 +25,11 @@ message ReadRecordResponse {
   optional Record record = 1;
 }
 
+message ListRecordsRequest{}
 
+message ListRecordsResponse{
+  repeated Record records = 1;
+}
 
 message Record {
   optional string id = 1;

@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	iofs "io/fs"
 	"os"
+	"path/filepath"
 
-	records "github.com/Nashluffy/aqualog/gen/records"
+	"github.com/Nashluffy/aqualog/gen/records"
 )
 
 type Writer interface {
@@ -14,6 +16,7 @@ type Writer interface {
 }
 
 type Reader interface {
+	List() ([]*records.Record, error)
 	Read(id string) (records.Record, error)
 }
 
@@ -29,23 +32,32 @@ func NewFSReader(path string) Reader {
 	return &fs{path: path}
 }
 
+func (fs *fs) List() ([]*records.Record, error) {
+	var records []*records.Record
+	err := filepath.WalkDir(fs.path, func(path string, d iofs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+		r, err := readFromFile(path)
+		if err != nil {
+			return err
+		}
+		records = append(records, &r)
+		return nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("error walking the path %s: %w", fs.path, err)
+	}
+	return records, nil
+}
+
 func (fs *fs) Read(id string) (records.Record, error) {
 	filename := fmt.Sprintf("%s/%s.json", fs.path, id)
-
-	var record records.Record
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return record, fmt.Errorf("file %q does not exist", filename)
-		}
-		return record, fmt.Errorf("failed to read file: %w", err)
-	}
-
-	if err := json.Unmarshal(data, &record); err != nil {
-		return record, fmt.Errorf("failed to unmarshal JSON: %w", err)
-	}
-
-	return record, nil
+	return readFromFile(filename)
 }
 
 func (fs *fs) Write(record records.Record) error {
@@ -61,4 +73,21 @@ func (fs *fs) Write(record records.Record) error {
 	}
 
 	return nil
+}
+
+func readFromFile(filename string) (records.Record, error) {
+	var record records.Record
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return record, fmt.Errorf("file %q does not exist", filename)
+		}
+		return record, fmt.Errorf("failed to read file: %w", err)
+	}
+
+	if err := json.Unmarshal(data, &record); err != nil {
+		return record, fmt.Errorf("failed to unmarshal JSON: %w", err)
+	}
+
+	return record, nil
 }
