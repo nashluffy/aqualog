@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:grpc/grpc.dart';
-import 'gen/dart/life/service.pbgrpc.dart';
+import 'gen/dart/marine/marine.pbgrpc.dart';
 
 class GrpcClient {
   ClientChannel? channel;
-  LifeClient? stub;
+  CatalogueClient? stub;
 
   Future<void> createClient() async {
     channel = ClientChannel(
@@ -13,7 +13,7 @@ class GrpcClient {
       options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
     );
 
-    stub = LifeClient(channel!);
+    stub = CatalogueClient(channel!);
   }
 
   Future<GetByIDResponse> getSpeciesById(int id) async {

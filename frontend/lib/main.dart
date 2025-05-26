@@ -1,4 +1,4 @@
-import 'package:aqualog/gen/dart/life/service.pb.dart';
+import 'package:aqualog/gen/dart/marine/marine.pb.dart';
 import 'package:aqualog/species.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

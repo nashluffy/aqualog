@@ -47,6 +47,7 @@ deps:
 	# Install Go dependencies
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	@go install github.com/bufbuild/buf/cmd/buf@latest
 	# Install Dart dependencies for gRPC
 	@cd frontend && flutter pub add grpc protobuf
 	@cd frontend && flutter pub get
@@ -55,6 +56,6 @@ deps:
 	@echo "protoc-gen-go version: $(PROTOC_GEN_GO)"
 	@echo "protoc-gen-go-grpc version: $(PROTOC_GEN_GRPC)"
 	@echo "protoc-gen-dart version: $(PROTOC_GEN_DART)"
-	@curl --create-dirs -L -o bin/species.parquet https://fishbase.ropensci.org/fishbase/species.parquet
-	@curl --create-dirs -L -o bin/comnames_all.parquet https://fishbase.ropensci.org/sealifebase/comnames_all.parquet
+	@curl -s --create-dirs -L -o bin/species.parquet https://fishbase.ropensci.org/fishbase/species.parquet
+	@curl -s --create-dirs -L -o bin/comnames_all.parquet https://fishbase.ropensci.org/sealifebase/comnames_all.parquet
 
