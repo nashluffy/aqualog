@@ -1,4 +1,4 @@
-SERVER_BINARY_NAME=backend/cmd/server/main.go
+SERVER_BINARY_NAME=./backend/cmd/server/
 
 run:
 	go run $(SERVER_BINARY_NAME)

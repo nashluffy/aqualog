@@ -1,7 +1,6 @@
 import 'package:aqualog/gen/marine/marine.pb.dart';
 import 'package:aqualog/species.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'grpc_client.dart'; // Import the gRPC client
 
 void main() {

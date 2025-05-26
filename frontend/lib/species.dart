@@ -1,4 +1,4 @@
-import 'package:aqualog/gen//marine/marine.pb.dart';
+import 'package:aqualog/gen/marine/marine.pb.dart';
 import 'package:flutter/material.dart';
 
 class SpeciesCard extends StatelessWidget {

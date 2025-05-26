@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// ReadRecord implements records.CatalogueServer.
 func (s *server) ReadRecord(ctx context.Context, req *records.ReadRecordRequest) (*records.ReadRecordResponse, error) {
 	r, err := s.recordReader.Read(req.GetId())
 	if err != nil {
